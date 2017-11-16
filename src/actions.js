@@ -1,33 +1,34 @@
 import store from './store';
 import firebase from 'firebase';
 
-    // Initialize Firebase
-    var config = {
-        apiKey: "AIzaSyD3RT9dGPTVDtxeqdBSkJtO8WN3epjrnjE",
-        authDomain: "fir-37152.firebaseapp.com",
-        databaseURL: "https://fir-37152.firebaseio.com",
-        projectId: "fir-37152",
-        storageBucket: "fir-37152.appspot.com",
-        messagingSenderId: "505773939781"
-    };
+// Initialize Firebase
+var config = {
+    apiKey: "AIzaSyD3RT9dGPTVDtxeqdBSkJtO8WN3epjrnjE",
+    authDomain: "fir-37152.firebaseapp.com",
+    databaseURL: "https://fir-37152.firebaseio.com",
+    projectId: "fir-37152",
+    storageBucket: "fir-37152.appspot.com",
+    messagingSenderId: "505773939781"
+};
 firebase.initializeApp(config);
+
 const snapshotToArray = snapshot => {
     console.log('object', snapshot);
     snapshot.forEach(childSnapshot => {
         let item = childSnapshot.val();
         let id = childSnapshot.key;
-        console.log('listi',childSnapshot.val().list)
+        console.log('listi', childSnapshot.val().list)
         item.id = id;
         const clone = [...store.getState().board]
-              
-            // clone.board.list = readListCard('list',id)
-        clone.push( item );
+
+        // clone.board.list = readListCard('list',id)
+        clone.push(item);
         store.setState({
             board: clone
         });
         // console.log('listas', readListCard('list', id, ))
     });
-     console.log('board',store.getState().board);
+    console.log('board', store.getState().board);
 }
 
 const readListCard = (list) => {
@@ -35,13 +36,27 @@ const readListCard = (list) => {
 
 }
 
-export const readAllBoards = () =>{
+export const readAllBoards = () => {
     firebase.database()
-    .ref('board/')
-    .once('value')
-    .then(res => {
-        snapshotToArray(res)
-    })
+        .ref('board/')
+        .once('value')
+        .then(res => {
+            snapshotToArray(res)
+        })
+        /*pasar el key por parametro*/
+    firebase.database()
+        .ref('board/-Kz31pasbLxmMyAl6ZXA')
+        .once('value')
+        .then(res => {
+            const list = res.val().list;
+            let listOfObjs = [];
+            list.forEach(item => {
+                    let obj = item.val();
+                    obj.id = item.key;
+                    listOfObjs.push(item.val());
+                })
+                // store.set as.... 
+        })
 }
 
 export const selectBoard = (index) => {
@@ -67,10 +82,11 @@ export const addCard = (card, selected, index) => {
     if (card != "") {
         const idBoard = store.getState().myBoard[selected].id;
         const idList = store.getState().myBoard[selected].list[index].id;
-        firebase.database().ref('board/'+idBoard+"/list/"+idList+"/card/").push(
-            {
+
+        firebase.database().ref('board/' + idBoard + "/list/" + idList + "/card/").push({
             cardTitle: card,
         })
+
         const cloneList = [...store.getState().myBoard];
         let newCard = {
             cardTitle: card,
@@ -86,9 +102,13 @@ export const addCard = (card, selected, index) => {
 }
 export const addBoard = (title, selected) => {
         if (title != "") {
+
+
             const keyBoard = firebase.database().ref('board').push({
-                title:title
+                title: title
             }).key;
+
+
             const cloneList = [...store.getState().myBoard];
             let newBoard = {
                 id: keyBoard,
@@ -114,10 +134,13 @@ export const addList = (title, selected) => {
     console.log('title', title, 'selected', selected);
     const idd = store.getState().myBoard[selected].id;
     if (title != "") {
-        const idCard = firebase.database().ref('board/'+idd+"/list/").push(
-            {
+
+
+        const idCard = firebase.database().ref('board/' + idd + "/list/").push({
             titleList: title,
         }).key;
+
+
         let newVal = {
             id: idCard,
             titleList: title,
@@ -141,4 +164,5 @@ export const evaluateAddList = (selected) => {
     store.setState({
         myBoard: cloneList
     });
+
 }
