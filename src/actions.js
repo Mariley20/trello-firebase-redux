@@ -17,74 +17,39 @@ const snapshotToArray = snapshot => {
         let item = childSnapshot.val();
         let id = childSnapshot.key;
         item.id = id;
+        firebase.database().ref('trello/' + id + '/stage/').once('value')
+            .then(res => {
+                let listOfObjs = [];
+                res.forEach(item => {
+                    let obj = item.val();
+                    let idList = item.key;
+                    obj.id = item.key;
+                    firebase.database().ref('trello/' + id + '/stage/' + idList + '/task/').once('value')
+                        .then(task => {
+                            let taskObjs = [];
+                            task.forEach(item => {
+                                let tasks = item.val();
+                                tasks.id = item.key;
+                                taskObjs.push(tasks)
+                            });
+
+                            obj.task = taskObjs;
+                        });
+
+                    listOfObjs.push(obj);
+                })
+                item.stage = listOfObjs;
+            })
+
         const clone = [...store.getState().board]
+        console.log('itemmm', item)
         clone.push(item);
         store.setState({
             board: clone
         });
-
-        // readAllList(id)
     });
     console.log('board', store.getState().board);
 }
-
-const demo = () => {
-    console.log('entro')
-    const clone = [...store.getState().board];
-    clone.map((item, index) => {
-        readAllList(item.id, index)
-        item.list.map((item2, index2) => {
-            readAllCard(item.id, index, item2.id, index2)
-        });
-    });
-    console.log('board', store.getState().board);
-}
-
-const readAllCard = (id1, index1, id2, index2) => {
-    console.log('id', id1, 'index', index1)
-    console.log('id', id2, 'index', index2)
-
-
-    firebase.database()
-        .ref('trello/' + id1 + '/stage/' + id2)
-        .once('value')
-        .then(res => {
-            let listOfObjs = [];
-            res.forEach(item => {
-                let obj = item.val();
-                obj.id = item.key;
-                listOfObjs.push(obj);
-            })
-            const clone = [...store.getState().board]
-            clone.board[index1].list[index2] = listOfObjs;
-            store.setState({
-                board: clone
-            });
-            console.log('cards', listOfObjs)
-        })
-}
-
-const readAllList = (id, index) => {
-    console.log('id', id, 'index', index)
-    firebase.database()
-        .ref('trello/' + id + '/stage/')
-        .once('value')
-        .then(res => {
-            let listOfObjs = [];
-            res.forEach(item => {
-                let obj = item.val();
-                obj.id = item.key;
-                listOfObjs.push(obj);
-            })
-            const clone = [...store.getState().board]
-            clone.board[index].list = listOfObjs;
-            store.setState({
-                board: clone
-            });
-            console.log('listas', listOfObjs)
-        })
-}
-
 export const readAllBoards = () => {
     firebase.database()
         .ref('trello/')
@@ -92,35 +57,15 @@ export const readAllBoards = () => {
         .then(res => {
             snapshotToArray(res)
         });
-    demo()
-
-
-    //     /*pasar el key por parametro*/
-    // firebase.database()
-    //     .ref('board/-Kz31pasbLxmMyAl6ZXA')
-    //     .once('value')
-    //     .then(res => {
-    //         const list = res.val().list;
-    //         let listOfObjs = [];
-    //         list.forEach(item => {
-    //                 let obj = item.val();
-    //                 obj.id = item.key;
-    //                 listOfObjs.push(item.val());
-    //             })
-    // store.set as.... 
-    // })
 }
 
 export const selectBoard = (index) => {
-        console.log("index", store.getState().myBoard)
-        console.log("selected", store.getState().selected)
-        store.setState({
-            selected: index
-        })
-    }
-    // export const addBoard = () => {
-
-// }
+    // console.log("index", store.getState().myBoard)
+    // console.log("selected", store.getState().selected)
+    store.setState({
+        selected: index
+    })
+}
 export const evaluateAddCard = (selected, index) => {
     let newVal = (store.getState().myBoard[selected].list[index].newCard) ? false : true;
     const cloneList = [...store.getState().myBoard];
