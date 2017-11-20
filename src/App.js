@@ -18,9 +18,7 @@ import {Details} from './BoardDetail';
 const App = ({myBoard, newBoard, selected, successLogin, user}) => {
 return (
     <div className="container">
-    {/* {
-        successLogin  && <Redirect to = "/home" />
-         } */}
+
         <Header />
         <HashRouter>
             <Switch>
