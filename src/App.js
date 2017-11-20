@@ -30,7 +30,7 @@ return (
                     <Route path="/myboard"  render={() => <MyBoards successLogin={successLogin} myBoard={myBoard} newBoard={newBoard} selected={selected} />}/>
                     <Route path="/details"  render={() => <Details successLogin={successLogin} myBoard={myBoard}  selected={selected} />}/>
                     <Route exact path="/" render={() => <Redirect to="/sign_in"/>}/>
-                    <Route path='/trello-redux' render={() => <Redirect to="/sign_in"/>}/>
+                    <Route path='/trello-firebase-redux' render={() => <Redirect to="/sign_in"/>}/>
             </Switch>
         </HashRouter>
     </div>

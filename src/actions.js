@@ -9,32 +9,31 @@ const snapshotToArray = (snapshot, userID) => {
         let id = childSnapshot.key;
         item.id = id;
         // addList
-        database.ref('users/' + userID + '/trello/' + id + '/stage/').once('value')
-            .then(res => {
-                let listOfObjs = [];
-                res.forEach(item => {
-                    let obj = item.val();
-                    let idList = item.key;
-                    obj.id = item.key;
-                    //add Cards
-                    database.ref('users/' + userID + '/trello/' + id + '/stage/' + idList + '/task/').once('value')
-                        .then(task => {
-                            let taskObjs = [];
-                            task.forEach(item => {
-                                let tasks = item.val();
-                                tasks.id = item.key;
-                                taskObjs.push(tasks)
-                            });
-
-                            obj.task = taskObjs;
-                            obj.newCard = false;
+        database.ref('users/' + userID + '/trello/' + id + '/stage/').once('value', res => {
+            let listOfObjs = [];
+            res.forEach(item => {
+                let obj = item.val();
+                let idList = item.key;
+                obj.id = item.key;
+                //add Cards
+                database.ref('users/' + userID + '/trello/' + id + '/stage/' + idList + '/task/')
+                    .once('value', task => {
+                        let taskObjs = [];
+                        task.forEach(item => {
+                            let tasks = item.val();
+                            tasks.id = item.key;
+                            taskObjs.push(tasks)
                         });
 
-                    listOfObjs.push(obj);
-                })
-                item.stage = listOfObjs;
-                item.newList = false;
+                        obj.task = taskObjs;
+                        obj.newCard = false;
+                    });
+
+                listOfObjs.push(obj);
             })
+            item.stage = listOfObjs;
+            item.newList = false;
+        })
 
         const clone = [...store.getState().myBoard]
         console.log('itemmm', item)
@@ -176,9 +175,6 @@ export function signUp(fullname, email, pass, survey) {
                 .ref('users/' + user.uid)
                 .set(newuser);
 
-            // database.ref ('users/' + user.uid + '/options').update ( 'option1, option2,
-            // option3...');  database.ref ('users/').push (newuser);
-
             database
                 .ref('users/' + user.uid)
                 .on('value')
@@ -221,44 +217,25 @@ export function signIn(user, pass) {
                     id: user.uid,
                 }
             });
-            readAllBoards()
-
-            // database
-            //     .ref('users/' + userObj.uid)
-            //     .once('value')
-            //     .then(res => {
-            //         const fullUserInfo = res.val();
-
-            //         console.log('full info ', fullUserInfo);
-            //         store.setState({
-            //             user: {
-            //                 id: userObj.uid,
-            //                 email: fullUserInfo.email,
-            //                 fullname: fullUserInfo.fullname,
-            //                 survey: fullUserInfo.survey,
-            //                 question: fullUserInfo.question,
-            //                 options: fullUserInfo.options
-            //             }
-            //         })
-            //     })
+            // readAllBoards()
         })
 }
 
-auth.onAuthStateChanged(user => {
-    if (user) {
-        console.log('user', user);
-        let usersRef = database.ref('/users');
-        let userRef = usersRef.child(user.uid);
-        // console.log('user2', user.uid);
-        // store.setState({ successLogin: true })
+export const success = () => {
+    auth.onAuthStateChanged(user => {
+        if (user) {
+            console.log('user', user);
+            let usersRef = database.ref('users/').child(user.uid);
 
-        store.setState({
-            successLogin: true,
-            user: {
-                id: user.uid,
-            }
-        });
-        console.log('estasIngresando', store.getState().successLogin)
-        readAllBoards()
-    }
-});
+            store.setState({
+                successLogin: true,
+                user: {
+                    id: user.uid,
+                }
+            });
+            console.log('estasIngresando', store.getState().successLogin)
+            readAllBoards()
+        }
+    });
+}
+success();

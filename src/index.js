@@ -18,6 +18,7 @@ const Index = () => (
        <App />
     </Provider>
 );
+
 readAllBoards();
 ReactDOM.render(<Index />, document.getElementById('root'));
 registerServiceWorker();
