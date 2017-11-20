@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
-import {NavLink} from 'react-router-dom';
-import {evaluateAddList, addList, evaluateAddCard, addCard, readAllBoards} from './actions';
+import {NavLink, Redirect} from 'react-router-dom';
+// import {} from './actionsLogin';
+import {evaluateAddList, addList, evaluateAddCard, addCard, readAllBoards, signOut} from './actions';
 // readAllBoards();
 const ListCards = ({myCard}) => {
     let list = myCard.map((item, index) => {
@@ -75,10 +76,12 @@ const AddListHMTL = ({newBoard, selected}) => {
       </form> 
     )
 }
-export const Details = ({myBoard, selected}) => {
+export const Details = ({successLogin, myBoard, selected}) => {
     console.log('myBoard', myBoard[selected])
     return (
         <div>
+            { successLogin  && <Redirect to = "/sign_in" />}
+            <button onClick = {signOut}>  SignOut </button> 
            <h2> Hola Detalles {selected} </h2>
             <ListHomework myList={myBoard[selected]} selected={selected} />
             

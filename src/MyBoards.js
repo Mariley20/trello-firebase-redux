@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
-import {
-    NavLink
-} from 'react-router-dom';
-// import { Button } from 'react-bootstrap';
-import {readAllBoards, selectBoard, addBoard, evaluateAddBoard} from './actions';
+import {NavLink, Redirect} from 'react-router-dom';
+// import {signOut} from './actionsLogin';
+import {readAllBoards, selectBoard, addBoard, evaluateAddBoard, signOut} from './actions';
 // readAllBoards();
 const ListBoard = ({myBoard, newBoard, selected}) => {
     let list = myBoard.map((item, index) => {
@@ -36,9 +34,11 @@ const AddBoardHMTL = ({newBoard, selected}) => {
         </div>
     )
 }
-export const MyBoards = ({myBoard, newBoard, selected}) => {
+export const MyBoards = ({successLogin, myBoard, newBoard, selected}) => {
     return (
         <div>
+            { successLogin  && <Redirect to = "/sign_in" />}
+            <button onClick = {signOut}>  SignOut </button>
             <ListBoard myBoard={myBoard} className="btn btn-secundary" selected={selected} />
             <div className="board">
             {!newBoard?

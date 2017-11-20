@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {NavLink,Redirect} from 'react-router-dom';
-import {signIn} from './actionsLogin'
+import {signIn} from './actions'
 import './css/app.css';
 // import { Button, Form, FormControl, FormGroup, Col, Checkbox } from 'react-bootstrap';
 

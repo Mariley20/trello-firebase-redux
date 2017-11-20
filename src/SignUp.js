@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {Redirect} from 'react-router-dom';
-import {signUp} from './actionsLogin';
+import {signUp} from './actions';
 import './css/app.css';
 
 export const SignUp = ({successLogin}) => {
