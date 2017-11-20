@@ -1,30 +1,20 @@
 import store from './store';
 import firebase from 'firebase';
+import {database} from './firebase';
 
-// Initialize Firebase
-var config = {
-    apiKey: "AIzaSyD3RT9dGPTVDtxeqdBSkJtO8WN3epjrnjE",
-    authDomain: "fir-37152.firebaseapp.com",
-    databaseURL: "https://fir-37152.firebaseio.com",
-    projectId: "fir-37152",
-    storageBucket: "fir-37152.appspot.com",
-    messagingSenderId: "505773939781"
-};
-firebase.initializeApp(config);
-
-const snapshotToArray = snapshot => {
+const snapshotToArray = (snapshot, userID) => {
     snapshot.forEach(childSnapshot => {
         let item = childSnapshot.val();
         let id = childSnapshot.key;
         item.id = id;
-        firebase.database().ref('trello/' + id + '/stage/').once('value')
+        database.ref('users/'+userID+'/trello/' + id + '/stage/').once('value')
             .then(res => {
                 let listOfObjs = [];
                 res.forEach(item => {
                     let obj = item.val();
                     let idList = item.key;
                     obj.id = item.key;
-                    firebase.database().ref('trello/' + id + '/stage/' + idList + '/task/').once('value')
+                    database.ref('users/'+userID+'/trello/' + id + '/stage/' + idList + '/task/').once('value')
                         .then(task => {
                             let taskObjs = [];
                             task.forEach(item => {
@@ -50,12 +40,12 @@ const snapshotToArray = snapshot => {
     });
     console.log('board', store.getState().board);
 }
-export const readAllBoards = () => {
-    firebase.database()
-        .ref('trello/')
+export const readAllBoards = (userID) => {
+    database
+        .ref('users/'+userID+'/trello/')
         .once('value')
         .then(res => {
-            snapshotToArray(res)
+            snapshotToArray(res, userID)
         });
 }
 
@@ -80,7 +70,7 @@ export const addCard = (card, selected, index) => {
         const idBoard = store.getState().myBoard[selected].id;
         const idList = store.getState().myBoard[selected].list[index].id;
 
-        firebase.database().ref('trello/' + idBoard + "/stage/" + idList + "/task/").push({
+        database.ref('trello/' + idBoard + "/stage/" + idList + "/task/").push({
             cardTitle: card,
         })
 
@@ -98,10 +88,11 @@ export const addCard = (card, selected, index) => {
     }
 }
 export const addBoard = (title, selected) => {
+    console.log('userID', store.getState().user.id);
+    const userID = store.getState().user.id 
         if (title != "") {
 
-
-            const keyBoard = firebase.database().ref('trello').push({
+            const keyBoard = database.ref('users/'+userID+'/trello').push({
                 title: title
             }).key;
 
@@ -119,7 +110,7 @@ export const addBoard = (title, selected) => {
         }
         evaluateAddBoard(selected);
     }
-    // firebase.database().ref('users/oacsa').once('value').then(res => {res.val})
+    // database.ref('users/oacsa').once('value').then(res => {res.val})
 export const evaluateAddBoard = (selected) => {
     let newVal = (store.getState().newBoard) ? false : true;
 
@@ -133,7 +124,7 @@ export const addList = (title, selected) => {
     if (title != "") {
 
 
-        const idCard = firebase.database().ref('trello/' + idd + "/stage/").push({
+        const idCard = database.ref('trello/' + idd + "/stage/").push({
             titleList: title,
         }).key;
 

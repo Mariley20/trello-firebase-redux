@@ -7,10 +7,12 @@ import {
     Redirect,
     Switch} from 'react-router-dom';
 import './css/app.css';
+import {Home} from './Home';
 import {SignIn} from './SignIn';
 import {SignUp} from './SignUp';
 import {MyBoards} from './MyBoards';
 import {Details} from './BoardDetail';
+import {signOut} from './actionsLogin'
 const App = ({myBoard, newBoard, selected, successLogin, user}) => {
 return (
     <div className="container">
@@ -23,10 +25,10 @@ return (
             <Switch>
                     <Route name="home"  exact path = "/home" render={() => <Home successLogin={successLogin} user={user}/>}/>
                     <Route path="/sign_up" render={() => <SignUp successLogin={successLogin} />}/>
-                    <Route path="/sign_in"  render={() => <SignIn successLogin={successLogin} />}/>
+                    <Route path="/sign_in"  render={() => <SignIn successLogin={successLogin} SignUp={SignUp} />}/>
                     <Route path="/myboard"  render={() => <MyBoards myBoard={myBoard} newBoard={newBoard} selected={selected} />}/>
                     <Route path="/details"  render={() => <Details myBoard={myBoard}  selected={selected} />}/>
-                    <Route exact path="/" render={() => <SignIn successLogin={successLogin} />}/>
+                    <Route exact path="/" render={() => <SignIn successLogin={successLogin} SignUp={SignUp} />}/>
                     <Route path='/trello-redux' render={() => <Redirect to="/sign_in"/>}/>
             </Switch>
         </BrowserRouter>
@@ -36,6 +38,9 @@ return (
 const Header = () => {
     return (
         <div>
+            <button onClick = {signOut}>
+            SignOut
+         </button>  
             <img className="logo" src="https://phoenix-trello.herokuapp.com/images/logo-11ecccd65d1c7977997eb6f0bc0002ad.png?vsn=d" />
         </div>
     )

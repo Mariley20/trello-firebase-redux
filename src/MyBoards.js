@@ -4,7 +4,7 @@ import {
 } from 'react-router-dom';
 // import { Button } from 'react-bootstrap';
 import {readAllBoards, selectBoard, addBoard, evaluateAddBoard} from './actions';
-readAllBoards();
+// readAllBoards();
 const ListBoard = ({myBoard, newBoard, selected}) => {
     let list = myBoard.map((item, index) => {
         return (

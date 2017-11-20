@@ -1,10 +1,10 @@
 import store from './store'
 import {auth, database} from './firebase';
+import {readAllBoards} from './actions';
 
 export function signUp(fullname, email, pass, survey, question, options) {
     console.log('signUp' + fullname + email + pass);
-
-    auth
+         auth
         .createUserWithEmailAndPassword(email, pass)
         .then(user => {
             let newuser = {
@@ -59,25 +59,25 @@ export function signIn(user, pass) {
     auth
         .signInWithEmailAndPassword(user, pass)
         .then(userObj => {
+            readAllBoards(userObj.uid)
+            // database
+            //     .ref('users/' + userObj.uid)
+            //     .once('value')
+            //     .then(res => {
+            //         const fullUserInfo = res.val();
 
-            database
-                .ref('users/' + userObj.uid)
-                .once('value')
-                .then(res => {
-                    const fullUserInfo = res.val();
-
-                    console.log('full info ', fullUserInfo);
-                    store.setState({
-                        user: {
-                            id: userObj.uid,
-                            email: fullUserInfo.email,
-                            fullname: fullUserInfo.fullname,
-                            survey: fullUserInfo.survey,
-                            question: fullUserInfo.question,
-                            options: fullUserInfo.options
-                        }
-                    })
-                })
+            //         console.log('full info ', fullUserInfo);
+            //         store.setState({
+            //             user: {
+            //                 id: userObj.uid,
+            //                 email: fullUserInfo.email,
+            //                 fullname: fullUserInfo.fullname,
+            //                 survey: fullUserInfo.survey,
+            //                 question: fullUserInfo.question,
+            //                 options: fullUserInfo.options
+            //             }
+            //         })
+            //     })
         })
 }
 
@@ -86,6 +86,8 @@ auth.onAuthStateChanged(user => {
         console.log('user', user);
         let usersRef = database.ref('/users');
         let userRef = usersRef.child(user.uid);
+        // console.log('user2', user.uid);
         store.setState({successLogin: true})
+        readAllBoards(user.uid)
     }
 });

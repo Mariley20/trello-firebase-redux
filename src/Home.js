@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 // import { Button, Form, FormControl, FormGroup, Col, Checkbox } from
 // 'react-bootstrap';
-import {NavLink, Redirect} from 'react-router-dom';
-import {signIn, signOut, signUp} from './actionsLogin'
+import {Redirect} from 'react-router-dom';
+import {signOut} from './actionsLogin'
 export const Home  = ({successLogin, user}) => {
     return (
       <div className="App">
