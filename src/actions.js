@@ -67,10 +67,11 @@ export const evaluateAddCard = (selected, index) => {
 }
 export const addCard = (card, selected, index) => {
     if (card != "") {
+        const  userID = store.getState().user.id;
         const idBoard = store.getState().myBoard[selected].id;
         const idList = store.getState().myBoard[selected].list[index].id;
 
-        database.ref('trello/' + idBoard + "/stage/" + idList + "/task/").push({
+        database.ref('users/'+userID+'/trello/' + idBoard + "/stage/" + idList + "/task/").push({
             cardTitle: card,
         })
 
@@ -119,13 +120,14 @@ export const evaluateAddBoard = (selected) => {
     });
 }
 export const addList = (title, selected) => {
+    const userID =store.getState().user.id;
     console.log('iduserlista', store.getState().user.id);
     console.log('title', title, 'selected', selected);
     const idd = store.getState().myBoard[selected].id;
     if (title != "") {
 
 
-        const idCard = database.ref('trello/' + idd + "/stage/").push({
+        const idCard = database.ref('users/'+userID+'/trello/' + idd + "/stage/").push({
             titleList: title,
         }).key;
 
