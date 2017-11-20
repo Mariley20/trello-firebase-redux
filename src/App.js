@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from "redux-zero/react";
 import {
-    BrowserRouter,
+    HashRouter,
     NavLink,
     Route,
     Redirect,
@@ -21,17 +21,17 @@ return (
             <NavLink className="btn" to="/sign_in" >Sign in</NavLink>
             <NavLink className="btn" to="/sign_up" > Sign Up </NavLink>
         </div> */}
-        <BrowserRouter>
+        <HashRouter>
             <Switch>
                     <Route name="home"  exact path = "/home" render={() => <Home successLogin={successLogin} user={user}/>}/>
                     <Route path="/sign_up" render={() => <SignUp successLogin={successLogin} />}/>
                     <Route path="/sign_in"  render={() => <SignIn successLogin={successLogin} SignUp={SignUp} />}/>
                     <Route path="/myboard"  render={() => <MyBoards myBoard={myBoard} newBoard={newBoard} selected={selected} />}/>
                     <Route path="/details"  render={() => <Details myBoard={myBoard}  selected={selected} />}/>
-                    <Route exact path="/" render={() => <SignIn successLogin={successLogin} SignUp={SignUp} />}/>
+                    <Route exact path="/" render={() => <Redirect to="/sign_in"/>}/>
                     <Route path='/trello-redux' render={() => <Redirect to="/sign_in"/>}/>
             </Switch>
-        </BrowserRouter>
+        </HashRouter>
     </div>
 )
 }

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {NavLink} from 'react-router-dom';
-import {evaluateAddList, addList, evaluateAddCard, addCard} from './actions';
-
+import {evaluateAddList, addList, evaluateAddCard, addCard, readAllBoards} from './actions';
+// readAllBoards();
 const ListCards = ({myCard}) => {
     let list = myCard.map((item, index) => {
             return (
@@ -32,11 +32,12 @@ const AddCardsHTML = ({selected, index}) =>{
     )
 }
 const ListHomework = ({myList, selected}) => {
-    let list = myList.list.map((item, index) => {
+    console.log('myList', myList)
+    let list = myList.stage.map((item, index) => {
         return (
             <div className="boards" key={index}>
                 <h3>{item.titleList}</h3>
-                <ListCards myCard={item.cards}/>
+                <ListCards myCard={item.task}/>
                 {!item.newCard?
                     <a onClick={() => evaluateAddCard(selected, index)} >add a new Card </a>
                     :
@@ -75,6 +76,7 @@ const AddListHMTL = ({newBoard, selected}) => {
     )
 }
 export const Details = ({myBoard, selected}) => {
+    console.log('myBoard', myBoard[selected])
     return (
         <div>
            <h2> Hola Detalles {selected} </h2>

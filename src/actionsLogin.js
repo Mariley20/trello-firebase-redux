@@ -1,10 +1,10 @@
 import store from './store'
-import {auth, database} from './firebase';
-import {readAllBoards} from './actions';
+import { auth, database } from './firebase';
+import { readAllBoards } from './actions';
 
 export function signUp(fullname, email, pass, survey) {
     console.log('signUp' + fullname + email + pass);
-         auth
+    auth
         .createUserWithEmailAndPassword(email, pass)
         .then(user => {
             let newuser = {
@@ -56,11 +56,11 @@ export function signIn(user, pass) {
         .signInWithEmailAndPassword(user, pass)
         .then(userObj => {
             readAllBoards(userObj.uid)
-            // database
-            //     .ref('users/' + userObj.uid)
-            //     .once('value')
-            //     .then(res => {
-            //         const fullUserInfo = res.val();
+                // database
+                //     .ref('users/' + userObj.uid)
+                //     .once('value')
+                //     .then(res => {
+                //         const fullUserInfo = res.val();
 
             //         console.log('full info ', fullUserInfo);
             //         store.setState({
@@ -77,18 +77,19 @@ export function signIn(user, pass) {
         })
 }
 
-auth.onAuthStateChanged(user => {
-    if (user) {
-        console.log('user', user);
-        let usersRef = database.ref('/users');
-        let userRef = usersRef.child(user.uid);
-        // console.log('user2', user.uid);
-        store.setState({successLogin: true})
-        readAllBoards(user.uid)
-        store.setState({
-                        user: {
-                            id: user.uid,
-                        }
-                    })
-    }
-});
+// auth.onAuthStateChanged(user => {
+//     if (user) {
+//         console.log('user', user);
+//         let usersRef = database.ref('/users');
+//         let userRef = usersRef.child(user.uid);
+//         // console.log('user2', user.uid);
+//         store.setState({ successLogin: true })
+
+//         store.setState({
+//             user: {
+//                 id: user.uid,
+//             }
+//         });
+//         readAllBoards()
+//     }
+// });

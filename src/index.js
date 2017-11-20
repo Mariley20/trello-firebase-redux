@@ -8,6 +8,7 @@ import {
 } from 'react-router-dom';
 import store from "./store";
 import App from './App';
+import {readAllBoards} from './actions';
 import  './css/app.css';
 // import {SignIn} from './SignIn';
 // import {SignUp} from './SignUp';
@@ -16,12 +17,9 @@ import registerServiceWorker from './registerServiceWorker';
 
 const Index = () => (
     <Provider store={store}>
-        <HashRouter>
-            <Switch>
-                    <Route exact path="/" component={App} />
-            </Switch>
-        </HashRouter>
+       <App />
     </Provider>
 );
+readAllBoards()
 ReactDOM.render(<Index />, document.getElementById('root'));
 registerServiceWorker();

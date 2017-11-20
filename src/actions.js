@@ -1,20 +1,23 @@
 import store from './store';
 import firebase from 'firebase';
-import {database} from './firebase';
+import { auth, database } from './firebase';
 
 const snapshotToArray = (snapshot, userID) => {
     snapshot.forEach(childSnapshot => {
+        // console.log('iduser', userID)
         let item = childSnapshot.val();
         let id = childSnapshot.key;
         item.id = id;
-        database.ref('users/'+userID+'/trello/' + id + '/stage/').once('value')
+        // addList
+        database.ref('users/' + userID + '/trello/' + id + '/stage/').once('value')
             .then(res => {
                 let listOfObjs = [];
                 res.forEach(item => {
                     let obj = item.val();
                     let idList = item.key;
                     obj.id = item.key;
-                    database.ref('users/'+userID+'/trello/' + id + '/stage/' + idList + '/task/').once('value')
+                    //add Cards
+                    database.ref('users/' + userID + '/trello/' + id + '/stage/' + idList + '/task/').once('value')
                         .then(task => {
                             let taskObjs = [];
                             task.forEach(item => {
@@ -24,25 +27,29 @@ const snapshotToArray = (snapshot, userID) => {
                             });
 
                             obj.task = taskObjs;
+                            obj.newCard = false;
                         });
 
                     listOfObjs.push(obj);
                 })
                 item.stage = listOfObjs;
+                item.newList = false;
             })
 
-        const clone = [...store.getState().board]
+        const clone = [...store.getState().myBoard]
         console.log('itemmm', item)
         clone.push(item);
         store.setState({
-            board: clone
+            myBoard: clone
         });
     });
-    console.log('board', store.getState().board);
+    console.log('board', store.getState().myBoard);
 }
-export const readAllBoards = (userID) => {
+export const readAllBoards = () => {
+    const userID = store.getState().user.id;
+    console.log('useid-', userID)
     database
-        .ref('users/'+userID+'/trello/')
+        .ref('users/' + userID + '/trello/')
         .once('value')
         .then(res => {
             snapshotToArray(res, userID)
@@ -57,9 +64,9 @@ export const selectBoard = (index) => {
     })
 }
 export const evaluateAddCard = (selected, index) => {
-    let newVal = (store.getState().myBoard[selected].list[index].newCard) ? false : true;
+    let newVal = (store.getState().myBoard[selected].stage[index].newCard) ? false : true;
     const cloneList = [...store.getState().myBoard];
-    cloneList[selected].list[index].newCard = newVal;
+    cloneList[selected].stage[index].newCard = newVal;
 
     store.setState({
         myBoard: cloneList
@@ -67,47 +74,47 @@ export const evaluateAddCard = (selected, index) => {
 }
 export const addCard = (card, selected, index) => {
     if (card != "") {
-        const  userID = store.getState().user.id;
+        const userID = store.getState().user.id;
         const idBoard = store.getState().myBoard[selected].id;
-        const idList = store.getState().myBoard[selected].list[index].id;
+        const idList = store.getState().myBoard[selected].stage[index].id;
 
-        database.ref('users/'+userID+'/trello/' + idBoard + "/stage/" + idList + "/task/").push({
+        database.ref('users/' + userID + '/trello/' + idBoard + "/stage/" + idList + "/task/").push({
             cardTitle: card,
         })
 
-        const cloneList = [...store.getState().myBoard];
-        let newCard = {
-            cardTitle: card,
-            commentary: []
-        }
-        cloneList[selected].list[index].cards.push(newCard);
-        store.setState({
-            myBoard: cloneList
-        });
+        // const cloneList = [...store.getState().myBoard];
+        // let newCard = {
+        //     cardTitle: card,
+        //     commentary: []
+        // }
+        // cloneList[selected].list[index].cards.push(newCard);
+        // store.setState({
+        //     myBoard: cloneList
+        // });
         // console.log("clonelist", cloneList);
         evaluateAddCard(selected, index);
     }
 }
 export const addBoard = (title, selected) => {
-    console.log('userID', store.getState().user.id);
-    const userID = store.getState().user.id 
+        console.log('userID', store.getState().user.id);
+        const userID = store.getState().user.id
         if (title != "") {
 
-            const keyBoard = database.ref('users/'+userID+'/trello').push({
+            const keyBoard = database.ref('users/' + userID + '/trello').push({
                 title: title
             }).key;
 
 
-            const cloneList = [...store.getState().myBoard];
-            let newBoard = {
-                id: keyBoard,
-                title: title,
-                list: []
-            }
-            cloneList.push(newBoard);
-            store.setState({
-                myBoard: cloneList
-            });
+            // const cloneList = [...store.getState().myBoard];
+            // let newBoard = {
+            //     id: keyBoard,
+            //     title: title,
+            //     list: []
+            // }
+            // cloneList.push(newBoard);
+            // store.setState({
+            //     myBoard: cloneList
+            // });
         }
         evaluateAddBoard(selected);
     }
@@ -120,30 +127,30 @@ export const evaluateAddBoard = (selected) => {
     });
 }
 export const addList = (title, selected) => {
-    const userID =store.getState().user.id;
+    const userID = store.getState().user.id;
     console.log('iduserlista', store.getState().user.id);
     console.log('title', title, 'selected', selected);
     const idd = store.getState().myBoard[selected].id;
     if (title != "") {
 
 
-        const idCard = database.ref('users/'+userID+'/trello/' + idd + "/stage/").push({
+        const idCard = database.ref('users/' + userID + '/trello/' + idd + "/stage/").push({
             titleList: title,
         }).key;
 
 
-        let newVal = {
-            id: idCard,
-            titleList: title,
-            newCard: false,
-            cards: []
-        }
-        const cloneList = [...store.getState().myBoard];
-        cloneList[selected].list.push(newVal);
+        // let newVal = {
+        //     id: idCard,
+        //     titleList: title,
+        //     newCard: false,
+        //     cards: []
+        // }
+        // const cloneList = [...store.getState().myBoard];
+        // cloneList[selected].list.push(newVal);
 
-        store.setState({
-            myBoard: cloneList
-        });
+        // store.setState({
+        //     myBoard: cloneList
+        // });
     }
     evaluateAddList(selected);
 }
