@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {} from 'react';
 import {NavLink, Redirect} from 'react-router-dom';
 // import {} from './actionsLogin';
 import {evaluateAddList, addList, evaluateAddCard, addCard, readAllBoards, signOut} from './actions';
@@ -33,7 +33,7 @@ const AddCardsHTML = ({selected, index}) =>{
     )
 }
 const ListHomework = ({myList, selected}) => {
-    console.log('myList', myList)
+    // console.log('myList', myList)
     let list = myList.stage.map((item, index) => {
         return (
             <div className="boards" key={index}>
@@ -62,7 +62,7 @@ const ListHomework = ({myList, selected}) => {
 const AddListHMTL = ({newBoard, selected}) => {
     const onSubmit = (e) => {
 		e.preventDefault();
-		console.log ( 'this..', this);//con truco, es el connect el this.
+		// console.log ( 'this..', this);//con truco, es el connect el this.
     addList(this.List.value, selected);
      this.List.value = "";
   }
@@ -77,10 +77,10 @@ const AddListHMTL = ({newBoard, selected}) => {
     )
 }
 export const Details = ({successLogin, myBoard, selected}) => {
-    console.log('myBoard', myBoard[selected])
+    // console.log('myBoard', myBoard[selected])
     return (
         <div>
-            { successLogin  && <Redirect to = "/sign_in" />}
+            { !successLogin  && <Redirect to = "/sign_in" />}
             <button onClick = {signOut}>  SignOut </button> 
            <h2> Hola Detalles {selected} </h2>
             <ListHomework myList={myBoard[selected]} selected={selected} />

@@ -46,8 +46,8 @@ const snapshotToArray = (snapshot, userID) => {
     console.log('board', store.getState().myBoard);
 }
 export const readAllBoards = () => {
-    const userID = store.getState().user.id;
-    console.log('useid-', userID)
+    let userID = store.getState().user.id;
+    // console.log('useid-', userID)
     database
         .ref('users/' + userID + '/trello/')
         .once('value')
@@ -74,7 +74,7 @@ export const evaluateAddCard = (selected, index) => {
 }
 export const addCard = (card, selected, index) => {
     if (card != "") {
-        const userID = store.getState().user.id;
+        let userID = store.getState().user.id;
         const idBoard = store.getState().myBoard[selected].id;
         const idList = store.getState().myBoard[selected].stage[index].id;
 
@@ -99,10 +99,9 @@ export const addBoard = (title, selected) => {
         console.log('userID', store.getState().user.id);
         const userID = store.getState().user.id
         if (title != "") {
-
-            const keyBoard = database.ref('users/' + userID + '/trello').push({
+            database.ref('users/' + userID + '/trello').push({
                 title: title
-            }).key;
+            });
 
 
             // const cloneList = [...store.getState().myBoard];
@@ -129,14 +128,11 @@ export const evaluateAddBoard = (selected) => {
 export const addList = (title, selected) => {
     const userID = store.getState().user.id;
     console.log('iduserlista', store.getState().user.id);
-    console.log('title', title, 'selected', selected);
     const idd = store.getState().myBoard[selected].id;
     if (title != "") {
-
-
-        const idCard = database.ref('users/' + userID + '/trello/' + idd + "/stage/").push({
+        database.ref('users/' + userID + '/trello/' + idd + "/stage/").push({
             titleList: title,
-        }).key;
+        });
 
 
         // let newVal = {
@@ -185,7 +181,7 @@ export function signUp(fullname, email, pass, survey) {
 
             database
                 .ref('users/' + user.uid)
-                .once('value')
+                .on('value')
                 .then(res => {
                     const fullUserInfo = res.val();
 
@@ -212,7 +208,8 @@ export function signOut() {
             id: '',
             email: ''
         }
-    })
+    });
+    console.log('estasSaliendo', store.getState().successLogin)
 }
 
 export function signIn(user, pass) {
@@ -253,13 +250,15 @@ auth.onAuthStateChanged(user => {
         let usersRef = database.ref('/users');
         let userRef = usersRef.child(user.uid);
         // console.log('user2', user.uid);
-        store.setState({ successLogin: true })
+        // store.setState({ successLogin: true })
 
         store.setState({
+            successLogin: true,
             user: {
                 id: user.uid,
             }
         });
+        console.log('estasIngresando', store.getState().successLogin)
         readAllBoards()
     }
 });

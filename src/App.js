@@ -11,11 +11,16 @@ import {Home} from './Home';
 import {SignIn} from './SignIn';
 import {SignUp} from './SignUp';
 import {MyBoards} from './MyBoards';
+// import {readAllBoards} from './actions';
 import {Details} from './BoardDetail';
 // import {signOut} from './actionsLogin'
+// readAllBoards();
 const App = ({myBoard, newBoard, selected, successLogin, user}) => {
 return (
     <div className="container">
+    {/* {
+        successLogin  && <Redirect to = "/home" />
+         } */}
         <Header />
         <HashRouter>
             <Switch>

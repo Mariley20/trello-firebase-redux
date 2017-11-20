@@ -37,7 +37,7 @@ const AddBoardHMTL = ({newBoard, selected}) => {
 export const MyBoards = ({successLogin, myBoard, newBoard, selected}) => {
     return (
         <div>
-            { successLogin  && <Redirect to = "/sign_in" />}
+            { !successLogin  && <Redirect to = "/sign_in" />}
             <button onClick = {signOut}>  SignOut </button>
             <ListBoard myBoard={myBoard} className="btn btn-secundary" selected={selected} />
             <div className="board">

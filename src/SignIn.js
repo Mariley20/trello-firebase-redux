@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {NavLink,Redirect} from 'react-router-dom';
-import {signIn} from './actions'
+import {signIn, signOut} from './actions'
 import './css/app.css';
 // import { Button, Form, FormControl, FormGroup, Col, Checkbox } from 'react-bootstrap';
 
@@ -10,7 +10,8 @@ export const SignIn = ({successLogin, SignUp}) => {
     {
        successLogin  && <Redirect to = "/home" />
     }
-    <h1> Kahoot Survey Admin </h1>
+    <button onClick = {signOut}>  SignOut </button> 
+    <h1> ADMIN </h1>
     <form className='demoForm' onSubmit = {
        e => {
           e.preventDefault();

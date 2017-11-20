@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {Redirect} from 'react-router-dom';
-import {signUp} from './actions';
+import {signUp, signOut} from './actions';
 import './css/app.css';
 
 export const SignUp = ({successLogin}) => {
@@ -9,6 +9,7 @@ export const SignUp = ({successLogin}) => {
         {
            successLogin  && <Redirect to = "/home" />
         }
+        <button onClick = {signOut}>  SignOut </button> 
         <form className='demoForm' onSubmit =  {
            e => {
               e.preventDefault();
