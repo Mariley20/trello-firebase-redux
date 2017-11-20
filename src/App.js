@@ -11,7 +11,7 @@ import {SignIn} from './SignIn';
 import {SignUp} from './SignUp';
 import {MyBoards} from './MyBoards';
 import {Details} from './BoardDetail';
-const App = ({myBoard, newBoard, selected, successLogin}) => {
+const App = ({myBoard, newBoard, selected, successLogin, user}) => {
 return (
     <div className="container">
         <Header />
@@ -21,11 +21,12 @@ return (
         </div> */}
         <BrowserRouter>
             <Switch>
-                    <Route exact path="/" render={() => <SignIn successLogin={successLogin} />}/>
+                    <Route name="home"  exact path = "/home" render={() => <Home successLogin={successLogin} user={user}/>}/>
                     <Route path="/sign_up" render={() => <SignUp successLogin={successLogin} />}/>
                     <Route path="/sign_in"  render={() => <SignIn successLogin={successLogin} />}/>
                     <Route path="/myboard"  render={() => <MyBoards myBoard={myBoard} newBoard={newBoard} selected={selected} />}/>
                     <Route path="/details"  render={() => <Details myBoard={myBoard}  selected={selected} />}/>
+                    <Route exact path="/" render={() => <SignIn successLogin={successLogin} />}/>
                     <Route path='/trello-redux' render={() => <Redirect to="/sign_in"/>}/>
             </Switch>
         </BrowserRouter>
@@ -39,6 +40,6 @@ const Header = () => {
         </div>
     )
 }
-const mapToProps = ({myBoard, newBoard, selected, successLogin}) => ({myBoard, newBoard, selected, successLogin});
+const mapToProps = ({myBoard, newBoard, selected, successLogin, user}) => ({myBoard, newBoard, selected, successLogin, user});
 
 export default connect(mapToProps)(App);
