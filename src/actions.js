@@ -119,6 +119,7 @@ export const evaluateAddBoard = (selected) => {
     });
 }
 export const addList = (title, selected) => {
+    console.log('iduserlista', store.getState().user.id);
     console.log('title', title, 'selected', selected);
     const idd = store.getState().myBoard[selected].id;
     if (title != "") {

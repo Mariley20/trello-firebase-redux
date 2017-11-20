@@ -33,9 +33,7 @@ user : {
     id: null,
     email: null,
     fullname: null,
-    survey: null,
-    question: null,
-    options: null
+    survey: null
 }
 };
 

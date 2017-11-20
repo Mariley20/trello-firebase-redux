@@ -2,7 +2,7 @@ import store from './store'
 import {auth, database} from './firebase';
 import {readAllBoards} from './actions';
 
-export function signUp(fullname, email, pass, survey, question, options) {
+export function signUp(fullname, email, pass, survey) {
     console.log('signUp' + fullname + email + pass);
          auth
         .createUserWithEmailAndPassword(email, pass)
@@ -11,8 +11,6 @@ export function signUp(fullname, email, pass, survey, question, options) {
                 fullname,
                 email,
                 survey,
-                question,
-                options
             }
             database
                 .ref('users/' + user.uid)
@@ -34,8 +32,6 @@ export function signUp(fullname, email, pass, survey, question, options) {
                             email: fullUserInfo.email,
                             fullname: fullUserInfo.fullname,
                             survey: fullUserInfo.survey,
-                            question: fullUserInfo.question,
-                            options: fullUserInfo.options
                         }
                     })
                 })
@@ -89,5 +85,10 @@ auth.onAuthStateChanged(user => {
         // console.log('user2', user.uid);
         store.setState({successLogin: true})
         readAllBoards(user.uid)
+        store.setState({
+                        user: {
+                            id: user.uid,
+                        }
+                    })
     }
 });

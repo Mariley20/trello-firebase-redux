@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {Redirect} from 'react-router-dom';
-import {signUp} from './actionsLogin'
+import {signUp} from './actionsLogin';
 
 export const SignUp = ({successLogin}) => {
     return(
@@ -18,8 +18,6 @@ export const SignUp = ({successLogin}) => {
               <input placeholder = "Email" ref = {e => this.emailRef = e}/>
               <input type="password" placeholder = "Password" ref = {e => this.passwordRef = e}/>
               <input placeholder = "Survey title" ref = {e => this.surveyRef = e} />
-              <input placeholder = "Question title" ref = {e => this.questionRef = e} />
-              <input placeholder = "Options [array]" ref = {e => this.optionsRef = e} />
              
               <button type="submit">
                  Sign Up!
