@@ -2,7 +2,7 @@ import React, {} from 'react';
 import {NavLink, Redirect} from 'react-router-dom';
 // import {} from './actionsLogin';
 import {readAllBoards, evaluateAddList, addList, evaluateAddCard, addCard, signOut, selectBoard} from './actions';
-readAllBoards();
+// readAllBoards();
 const ListCards = ({myCard}) => {
     let list = myCard.map((item, index) => {
             return (
@@ -80,7 +80,7 @@ export const Details = ({successLogin, myBoard, selected}) => {
     return (
         <div>
             { !successLogin  && <Redirect to = "/sign_in" />}
-            <button onClick = {signOut}>  SignOut </button> 
+            <button className='btn btn-secundary' onClick = {signOut}>  SignOut </button> 
            <h2> {myBoard[selected].title} </h2>
             <ListHomework myList={myBoard[selected]} selected={selected} />
             

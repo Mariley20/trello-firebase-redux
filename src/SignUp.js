@@ -9,7 +9,7 @@ export const SignUp = ({successLogin}) => {
         {
            successLogin  && <Redirect to = "/home" />
         }
-        <button onClick = {signOut}>  SignOut </button> 
+        <button className='btn btn-secundary' onClick = {signOut}>  SignOut </button> 
         <form className='demoForm' onSubmit =  {
            e => {
               e.preventDefault();

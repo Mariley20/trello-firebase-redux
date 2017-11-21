@@ -8,7 +8,6 @@ const snapshotToArray = (snapshot, userID) => {
         let item = childSnapshot.val();
         let id = childSnapshot.key;
         item.id = id;
-        // addList
         database.ref('users/' + userID + '/trello/' + id + '/stage/').on('value', res => {
             let listOfObjs = [];
             res.forEach(item => {
@@ -37,7 +36,6 @@ const snapshotToArray = (snapshot, userID) => {
         boardArray.push(item);
     });
     const clone = [...store.getState().myBoard];
-    // clone = boardArray;
     store.setState({
         myBoard: boardArray
     });
@@ -45,17 +43,13 @@ const snapshotToArray = (snapshot, userID) => {
 }
 export const readAllBoards = () => {
     let userID = store.getState().user.id;
-    // console.log('useid-', userID)
     database
         .ref('users/' + userID + '/trello/')
         .on('value', res => {
             snapshotToArray(res, userID)
         });
 }
-
 export const selectBoard = (index) => {
-    // console.log("index", store.getState().myBoard)
-    // console.log("selected", store.getState().selected)
     store.setState({
         selected: index
     })
@@ -77,58 +71,16 @@ export const evaluateAddBoard = (selected) => {
     });
 }
 export const addBoard = (title, selected) => {
-        readAllBoards()
-            // console.log('userID', store.getState().user.id);
-        let boardID = [...store.getState().myBoard].length;
-        const userID = store.getState().user.id
-        if (title != "") {
-            const keyBoard = database.ref('users/' + userID + '/trello').push({
-                title: title
-            }).key;
-
-
-            // const cloneList = [...store.getState().myBoard];
-            // let newBoard = {
-            //     id: keyBoard,
-            //     title: title,
-            //     newList: false,
-            //     stage: []
-            // }
-            // cloneList.push(newBoard);
-            // store.setState({
-            //     myBoard: cloneList
-            // });
-        }
-        evaluateAddBoard(selected);
-    }
-    // database.ref('users/oacsa').once('value').then(res => {res.val})
-
-export const addList = (title, selected) => {
-    const userID = store.getState().user.id;
-    let listID = store.getState().myBoard[selected].stage.length;
-    const boardID = [...store.getState().myBoard].length
-    const idd = store.getState().myBoard[selected].id;
+    let boardID = [...store.getState().myBoard].length;
+    const userID = store.getState().user.id
     if (title != "") {
-        const idList = database.ref('users/' + userID + '/trello/' + idd + "/stage").push({
-            titleList: title,
-        }).key;
-
-
-        // let newVal = {
-        //     id: idList,
-        //     titleList: title,
-        //     newCard: false,
-        //     cards: []
-        // }
-        // const cloneList = [...store.getState().myBoard];
-        // cloneList[selected].stage.push(newVal);
-
-        // store.setState({
-        //     myBoard: cloneList
-        // });
+        database.ref('users/' + userID + '/trello').push({
+            title: title
+        })
     }
-    evaluateAddList(selected);
+    evaluateAddBoard(selected);
 }
+
 export const evaluateAddList = (selected) => {
     let newVal = (store.getState().myBoard[selected].newList) ? false : true;
     const cloneList = [...store.getState().myBoard];
@@ -139,33 +91,34 @@ export const evaluateAddList = (selected) => {
     });
 
 }
+export const addList = (title, selected) => {
+    const userID = store.getState().user.id;
+    let listID = store.getState().myBoard[selected].stage.length;
+    const boardID = [...store.getState().myBoard].length
+    const idd = store.getState().myBoard[selected].id;
+    if (title != "") {
+        database.ref('users/' + userID + '/trello/' + idd + "/stage").push({
+            titleList: title,
+        });
+        evaluateAddList(selected);
+    }
+
+}
 
 export const addCard = (card, selected, index) => {
 
         if (card != "") {
-            // readAllBoards()
             let userID = store.getState().user.id;
             const idBoard = store.getState().myBoard[selected].id;
             const idList = store.getState().myBoard[selected].stage[index].id;
-            // let cardID = store.getState().myBoard[selected].stage.length;
-
 
             database.ref('users/' + userID + '/trello/' + idBoard + "/stage/" + idList + "/task").push({
                 cardTitle: card,
             })
-
-            // const cloneList = [...store.getState().myBoard];
-            // let newCard = {
-            //     cardTitle: card,
-            // }
-            // cloneList[selected].list[index].cards.push(newCard);
-            // store.setState({
-            //     myBoard: cloneList
-            // });
             evaluateAddCard(selected, index);
         }
     }
-    /*-------------------------------         LOGIN ---------------------------*/
+    /*------------------------------- LOGIN ---------------------------*/
 
 export function signUp(fullname, email, pass, survey) {
     console.log('signUp' + fullname + email + pass);
@@ -179,20 +132,19 @@ export function signUp(fullname, email, pass, survey) {
             }
             database.ref('users/' + user.uid).set(newuser);
 
-            database.ref('users/' + user.uid).on('value')
-                .then(res => {
-                    const fullUserInfo = res.val();
+            database.ref('users/' + user.uid).on('value', res => {
+                const fullUserInfo = res.val();
 
-                    console.log('full info ', fullUserInfo);
-                    store.setState({
-                        user: {
-                            id: user.uid,
-                            email: fullUserInfo.email,
-                            fullname: fullUserInfo.fullname,
-                            survey: fullUserInfo.survey,
-                        }
-                    })
+                console.log('full info ', fullUserInfo);
+                store.setState({
+                    user: {
+                        id: user.uid,
+                        email: fullUserInfo.email,
+                        fullname: fullUserInfo.fullname,
+                        survey: fullUserInfo.survey,
+                    }
                 })
+            })
 
         })
 
@@ -239,7 +191,7 @@ export const success = () => {
                     id: user.uid,
                 }
             });
-            console.log('estasIngresando', store.getState().successLogin)
+            console.log('estas-Ingresando', store.getState().successLogin)
             readAllBoards()
         }
     });

@@ -10,7 +10,7 @@ export const SignIn = ({successLogin, SignUp}) => {
     {
        successLogin  && <Redirect to = "/home" />
     }
-    <button onClick = {signOut}>  SignOut </button> 
+    <button className='btn btn-secundary' onClick = {signOut}>  SignOut </button> 
     <h1> ADMIN </h1>
     <form className='demoForm' onSubmit = {
        e => {
