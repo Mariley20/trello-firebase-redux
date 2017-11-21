@@ -29,7 +29,7 @@ export const SignIn = ({successLogin, SignUp}) => {
 		        <div className='input-group'>
 		        <span className="input-group-addon"><i className="fa fa-key fa-fw lock"></i></span>
                <input type="password" className="form-control inputName" name="password"
-                        placeholder="Email" ref = { e => this.passwordInputRef = e} />
+                        placeholder="password" ref = { e => this.passwordInputRef = e} />
 			      </div>
         </div>
      

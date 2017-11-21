@@ -20,7 +20,7 @@ export const SignUp = ({successLogin}) => {
         <div className='form-group'>
 		        <div className='input-group'>
 		        <span className="input-group-addon"><i className="fa fa-key fa-fw lock"></i></span>
-               <input type="text" className="form-control inputName" name="password"
+               <input type="text" className="form-control inputName" 
                         placeholder="FullName" ref = {e => this.fullNameRef = e} />
 			      </div>
         </div>
@@ -34,8 +34,8 @@ export const SignUp = ({successLogin}) => {
         <div className='form-group'>
 		        <div className='input-group'>
 		        <span className="input-group-addon"><i className="fa fa-key fa-fw lock"></i></span>
-               <input type="password" className="form-control inputName" name="password"
-                        placeholder="Email" ref = {e => this.passwordRef = e} />
+               <input type="password" className="form-control inputName" 
+                        placeholder="Password" ref = {e => this.passwordRef = e} />
 			      </div>
         </div>
         <div className='form-group'>
