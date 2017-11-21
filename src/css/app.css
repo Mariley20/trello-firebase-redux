@@ -1,3 +1,4 @@
+@charset "UTF-8";
 * {
   padding: 0;
   margin: 0;
@@ -11,9 +12,6 @@ body {
 
 li {
   list-style: none; }
-
-.list-flex {
-  display: flex; }
 
 .boards {
   display: inline-table;
@@ -45,5 +43,109 @@ li {
   color: #bdc3c7;
   border-radius: 3px;
   padding: 0.75em; }
+
+.containersign {
+  transform: translate(-50%, -50%);
+  position: absolute;
+  width: 450px;
+  top: 45%;
+  left: 50%;
+  text-align: center; }
+
+.imgbird {
+  height: 62px;
+  width: 198px; }
+
+.btnVolver {
+  position: absolute;
+  top: 10%;
+  left: 1%;
+  display: inline-block;
+  background: url(/images/logo-11ecccd….png?vsn=d) 0 0 no-repeat;
+  background-size: contain;
+  margin-left: 40%;
+  vertical-align: middle; }
+
+.signup-h {
+  color: #080808; }
+
+.btnVolver a {
+  color: black; }
+
+.btnVolver a:hover {
+  font-size: 1em; }
+
+.volver {
+  font-size: 4em; }
+
+.btnSiguiente {
+  background-color: #FF00BF;
+  color: white;
+  border: none;
+  width: 90%;
+  height: 50px;
+  border-radius: 0.3em;
+  text-align: center;
+  margin: 0 auto;
+  font-size: 1.5em;
+  margin-top: 20px; }
+
+.btn-ingresar {
+  background-color: #fff;
+  border: 1px solid #fff;
+  margin-bottom: 30px;
+  border-radius: 25px;
+  transition: all 0.15s ease-out 0s;
+  background: transparent; }
+
+p {
+  margin-bottom: .5rem;
+  font-family: inherit;
+  font-weight: 500;
+  line-height: 1.1;
+  color: inherit; }
+
+.form-group {
+  margin-top: 0px;
+  height: 50px; }
+
+.singupbtn p {
+  margin-bottom: 30px; }
+
+.btn-social {
+  border-radius: 25px;
+  margin-left: 10px;
+  color: #ffffff;
+  padding: 7px 0;
+  width: 200px; }
+
+.btn-social a {
+  font-family: arial;
+  color: #ffffff;
+  font-weight: bold; }
+
+.btn-social i {
+  font-size: 25px;
+  margin-right: 10px; }
+
+.doodle {
+  background: #c93611;
+  margin-bottom: 15px; }
+
+.face {
+  background: #0d33a3; }
+
+input,
+.inputName,
+.inputEmail {
+  background: white; }
+
+@media only screen and (min-width: 500px) {
+  #text-container-component {
+    margin: 0 auto;
+    width: 50%; }
+
+  .tcontainer-fluid {
+    background: transparent; } }
 
 /*# sourceMappingURL=app.css.map */

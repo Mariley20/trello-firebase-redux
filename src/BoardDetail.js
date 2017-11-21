@@ -1,7 +1,7 @@
 import React, {} from 'react';
 import {NavLink, Redirect} from 'react-router-dom';
 // import {} from './actionsLogin';
-import {evaluateAddList, addList, evaluateAddCard, addCard, readAllBoards, signOut, selectBoard} from './actions';
+import {readAllBoards, evaluateAddList, addList, evaluateAddCard, addCard, signOut, selectBoard} from './actions';
 readAllBoards();
 const ListCards = ({myCard}) => {
     let list = myCard.map((item, index) => {

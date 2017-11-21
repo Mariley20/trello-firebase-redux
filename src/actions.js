@@ -9,7 +9,7 @@ const snapshotToArray = (snapshot, userID) => {
         let id = childSnapshot.key;
         item.id = id;
         // addList
-        database.ref('users/' + userID + '/trello/' + id + '/stage/').once('value', res => {
+        database.ref('users/' + userID + '/trello/' + id + '/stage/').on('value', res => {
             let listOfObjs = [];
             res.forEach(item => {
                 let obj = item.val();
@@ -17,7 +17,7 @@ const snapshotToArray = (snapshot, userID) => {
                 obj.id = item.key;
                 //add Cards
                 database.ref('users/' + userID + '/trello/' + id + '/stage/' + idList + '/task/')
-                    .once('value', task => {
+                    .on('value', task => {
                         let taskObjs = [];
                         task.forEach(item => {
                             let tasks = item.val();
@@ -48,8 +48,7 @@ export const readAllBoards = () => {
     // console.log('useid-', userID)
     database
         .ref('users/' + userID + '/trello/')
-        .once('value')
-        .then(res => {
+        .on('value', res => {
             snapshotToArray(res, userID)
         });
 }
