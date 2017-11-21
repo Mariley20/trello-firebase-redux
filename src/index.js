@@ -10,7 +10,7 @@ import store from "./store";
 import App from './App';
 import  './css/app.css';
 import {MyBoards} from './MyBoards';
-import {readAllBoards} from './actions';
+import {readAllBoards, success} from './actions';
 import registerServiceWorker from './registerServiceWorker';
 
 const Index = () => (
@@ -19,6 +19,5 @@ const Index = () => (
     </Provider>
 );
 
-readAllBoards();
 ReactDOM.render(<Index />, document.getElementById('root'));
 registerServiceWorker();

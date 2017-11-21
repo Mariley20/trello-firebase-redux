@@ -3,8 +3,8 @@ import firebase from 'firebase';
 import { auth, database } from './firebase';
 
 const snapshotToArray = (snapshot, userID) => {
+    let boardArray = []
     snapshot.forEach(childSnapshot => {
-        // console.log('iduser', userID)
         let item = childSnapshot.val();
         let id = childSnapshot.key;
         item.id = id;
@@ -33,14 +33,13 @@ const snapshotToArray = (snapshot, userID) => {
             })
             item.stage = listOfObjs;
             item.newList = false;
-        })
-
-        const clone = [...store.getState().myBoard]
-        console.log('itemmm', item)
-        clone.push(item);
-        store.setState({
-            myBoard: clone
         });
+        boardArray.push(item);
+    });
+    const clone = [...store.getState().myBoard];
+    // clone = boardArray;
+    store.setState({
+        myBoard: boardArray
     });
     console.log('board', store.getState().myBoard);
 }
@@ -71,43 +70,30 @@ export const evaluateAddCard = (selected, index) => {
         myBoard: cloneList
     });
 }
-export const addCard = (card, selected, index) => {
-    if (card != "") {
-        let userID = store.getState().user.id;
-        const idBoard = store.getState().myBoard[selected].id;
-        const idList = store.getState().myBoard[selected].stage[index].id;
+export const evaluateAddBoard = (selected) => {
+    let newVal = (store.getState().newBoard) ? false : true;
 
-        database.ref('users/' + userID + '/trello/' + idBoard + "/stage/" + idList + "/task/").push({
-            cardTitle: card,
-        })
-
-        // const cloneList = [...store.getState().myBoard];
-        // let newCard = {
-        //     cardTitle: card,
-        //     commentary: []
-        // }
-        // cloneList[selected].list[index].cards.push(newCard);
-        // store.setState({
-        //     myBoard: cloneList
-        // });
-        // console.log("clonelist", cloneList);
-        evaluateAddCard(selected, index);
-    }
+    store.setState({
+        newBoard: newVal
+    });
 }
 export const addBoard = (title, selected) => {
-        console.log('userID', store.getState().user.id);
+        readAllBoards()
+            // console.log('userID', store.getState().user.id);
+        let boardID = [...store.getState().myBoard].length;
         const userID = store.getState().user.id
         if (title != "") {
-            database.ref('users/' + userID + '/trello').push({
+            const keyBoard = database.ref('users/' + userID + '/trello').push({
                 title: title
-            });
+            }).key;
 
 
             // const cloneList = [...store.getState().myBoard];
             // let newBoard = {
             //     id: keyBoard,
             //     title: title,
-            //     list: []
+            //     newList: false,
+            //     stage: []
             // }
             // cloneList.push(newBoard);
             // store.setState({
@@ -117,31 +103,26 @@ export const addBoard = (title, selected) => {
         evaluateAddBoard(selected);
     }
     // database.ref('users/oacsa').once('value').then(res => {res.val})
-export const evaluateAddBoard = (selected) => {
-    let newVal = (store.getState().newBoard) ? false : true;
 
-    store.setState({
-        newBoard: newVal
-    });
-}
 export const addList = (title, selected) => {
     const userID = store.getState().user.id;
-    console.log('iduserlista', store.getState().user.id);
+    let listID = store.getState().myBoard[selected].stage.length;
+    const boardID = [...store.getState().myBoard].length
     const idd = store.getState().myBoard[selected].id;
     if (title != "") {
-        database.ref('users/' + userID + '/trello/' + idd + "/stage/").push({
+        const idList = database.ref('users/' + userID + '/trello/' + idd + "/stage").push({
             titleList: title,
-        });
+        }).key;
 
 
         // let newVal = {
-        //     id: idCard,
+        //     id: idList,
         //     titleList: title,
         //     newCard: false,
         //     cards: []
         // }
         // const cloneList = [...store.getState().myBoard];
-        // cloneList[selected].list.push(newVal);
+        // cloneList[selected].stage.push(newVal);
 
         // store.setState({
         //     myBoard: cloneList
@@ -150,14 +131,40 @@ export const addList = (title, selected) => {
     evaluateAddList(selected);
 }
 export const evaluateAddList = (selected) => {
-        let newVal = (store.getState().myBoard[selected].newList) ? false : true;
-        const cloneList = [...store.getState().myBoard];
-        cloneList[selected].newList = newVal;
+    let newVal = (store.getState().myBoard[selected].newList) ? false : true;
+    const cloneList = [...store.getState().myBoard];
+    cloneList[selected].newList = newVal;
 
-        store.setState({
-            myBoard: cloneList
-        });
+    store.setState({
+        myBoard: cloneList
+    });
 
+}
+
+export const addCard = (card, selected, index) => {
+
+        if (card != "") {
+            // readAllBoards()
+            let userID = store.getState().user.id;
+            const idBoard = store.getState().myBoard[selected].id;
+            const idList = store.getState().myBoard[selected].stage[index].id;
+            // let cardID = store.getState().myBoard[selected].stage.length;
+
+
+            database.ref('users/' + userID + '/trello/' + idBoard + "/stage/" + idList + "/task").push({
+                cardTitle: card,
+            })
+
+            // const cloneList = [...store.getState().myBoard];
+            // let newCard = {
+            //     cardTitle: card,
+            // }
+            // cloneList[selected].list[index].cards.push(newCard);
+            // store.setState({
+            //     myBoard: cloneList
+            // });
+            evaluateAddCard(selected, index);
+        }
     }
     /*-------------------------------         LOGIN ---------------------------*/
 
@@ -171,13 +178,9 @@ export function signUp(fullname, email, pass, survey) {
                 email,
                 survey,
             }
-            database
-                .ref('users/' + user.uid)
-                .set(newuser);
+            database.ref('users/' + user.uid).set(newuser);
 
-            database
-                .ref('users/' + user.uid)
-                .on('value')
+            database.ref('users/' + user.uid).on('value')
                 .then(res => {
                     const fullUserInfo = res.val();
 
@@ -209,16 +212,20 @@ export function signOut() {
 }
 
 export function signIn(user, pass) {
-    auth
-        .signInWithEmailAndPassword(user, pass)
-        .then(userObj => {
+    auth.signInWithEmailAndPassword(user, pass).then(userObj => {
+        database.ref('users/' + userObj.uid).once('value').then(res => {
+            const fullUserInfo = res.val();
             store.setState({
                 user: {
-                    id: user.uid,
+                    id: userObj.uid,
+                    email: fullUserInfo.email,
+                    fullname: fullUserInfo.fullname,
+                    password: fullUserInfo.password,
                 }
-            });
-            // readAllBoards()
+            })
+            readAllBoards();
         })
+    })
 }
 
 export const success = () => {
